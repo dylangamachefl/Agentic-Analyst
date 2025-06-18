@@ -182,6 +182,11 @@ def insight_to_chart_agent(
     - **Data Aggregation:** If necessary, perform data aggregation (like groupby, pivot_table) in pandas *before* passing the data to Plotly.
     - **Interactivity:** Make good use of `hover_data` to show relevant details on mouse-over.
 
+    --- STRICT CODING RULES ---
+    1.  **Use `plotly.express` ONLY:** You MUST use `plotly.express` (imported as `px`) for all plotting. Do NOT use the lower-level `plotly.graph_objects` (imported as `go`).
+    2.  **Valid Arguments ONLY:** The `mode` argument is NOT valid for `px.scatter`. Stick to valid `plotly.express` arguments like `x`, `y`, `color`, `size`, `hover_data`, `title`, etc.
+    3.  **One Chart Per Figure:** Generate code for a *single*, clear chart. Do not try to overlay multiple chart types (e.g., using `fig.add_bar()`).
+
     --- FINAL INSTRUCTIONS ---
     Return **exactly two fenced blocks** in order:
     1.  **Thoughts block (label it ```thoughts)**: Your full Step I-III Tree-of-Thought reasoning.
