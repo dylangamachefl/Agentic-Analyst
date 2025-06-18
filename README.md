@@ -13,7 +13,7 @@ The application is a functional implementation inspired by the concepts presente
 
 ## 🚀 Live Demo
 
-**[Link to the deployed Streamlit Community Cloud App]**
+[Streamlit Link](https://data-to-analysis-app.streamlit.app/) 
 
 ## ✨ Key Features
 

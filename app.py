@@ -261,6 +261,9 @@ def insight_to_chart_agent(
     1.  **Use `plotly.express` ONLY:** You MUST use `plotly.express` (imported as `px`) for all plotting. Do NOT use the lower-level `plotly.graph_objects` (imported as `go`).
     2.  **Valid Arguments ONLY:** The `mode` argument is NOT valid for `px.scatter`. Stick to valid `plotly.express` arguments like `x`, `y`, `color`, `size`, `hover_data`, `title`, etc.
     3.  **One Chart Per Figure:** Generate code for a *single*, clear chart. Do not try to overlay multiple chart types (e.g., using `fig.add_bar()`).
+    4.  **DO NOT USE `matplotlib`:** You are strictly forbidden from importing or using `matplotlib.pyplot`. Do NOT call `plt.show()` or any other `matplotlib` functions.
+    5.  **ASSIGN TO `fig`:** The final line of code must assign the created chart to a variable named `fig`. (e.g., `fig = px.scatter(...)`)
+    6.  **DO NOT SHOW THE PLOT:** The code should create the figure object but not try to display it. The web application will handle rendering.
 
     --- FINAL INSTRUCTIONS ---
     Return **exactly two fenced blocks** in order:
