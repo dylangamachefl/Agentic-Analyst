@@ -40,24 +40,38 @@ The application is a functional implementation inspired by the concepts presente
 
 ## 🏛️ System Architecture
 
-This application simulates a team of analysts by chaining together several specialized agents. Each agent is a Python function that calls the Gemini API with a highly specific, role-oriented prompt.
+This application simulates a team of expert analysts by chaining together several specialized agents in an iterative, self-reflecting loop inspired by the original research paper.
+
+The core process is: **Profile -> Detect -> Extract -> Analyze -> Evaluate -> Reflect**.
 
 1.  **`Data Profiler Agent` (Local):**
     *   **Role:** The Data Clerk.
-    *   **Action:** Ingests the raw CSV and creates a compact, statistical JSON summary using Pandas. This is a crucial cost-saving step that avoids sending the entire file to the LLM.
+    *   **Action:** Ingests the raw CSV and creates a compact, statistical JSON summary using Pandas. This crucial first step avoids sending the entire (and potentially large) file to the LLM, saving costs and improving performance.
 
-2.  **`Analysis Generator Agent`:**
+2.  **`Domain Detector Agent`:**
+    *   **Role:** The Domain Specialist.
+    *   **Action:** Examines the data profile (column names, data types) to determine the specific business domain (e.g., "Marketing Analytics," "Financial Operations"). This provides essential context for all subsequent steps.
+
+3.  **`Concept Extractor Agent`:**
+    *   **Role:** The KPI Strategist.
+    *   **Action:** Takes the identified domain and data profile, and extracts a list of relevant key performance indicators (KPIs) and business concepts to focus on (e.g., "Customer Acquisition Cost," "Return on Investment"). This ensures the analysis is focused and relevant.
+
+4.  **`Analysis Generator Agent`:**
     *   **Role:** The Senior Business Consultant.
-    *   **Action:** Takes the data profile and, using its "InsightWriter-Advanced" persona, generates a deep textual analysis covering descriptive, predictive, and strategic domain-related insights. It has a self-correction loop to ensure its JSON output is valid.
+    *   **Action:** This is the core reasoning engine. It takes the profile, domain, and concepts, and adopts the "InsightWriter-Advanced" persona to generate a deep textual analysis covering descriptive, predictive, and strategic insights, often referencing established business frameworks (like SWOT).
 
-3.  **`Insight-to-Chart Agent`:**
+5.  **`Evaluator & Reflector Agents`:**
+    *   **Role:** The Quality Assurance Team.
+    *   **Action:** The `evaluator_agent` scores the analysis on metrics like depth, novelty, and relevance. If the scores are not perfect, the results are passed to a `reflector_agent` (implicitly handled in our code by feeding the evaluation back into the main analysis prompt on the next loop). This iterative feedback loop forces the system to improve its own output.
+
+6.  **`Insight-to-Chart Agent`:**
     *   **Role:** The Visualization Expert.
-    *   **Action:** Implements a Tree-of-Thought process. It analyzes the final textual analysis, debates chart types, selects the best one to communicate the core insight, and then generates the Python code (using Plotly) to create the visualization. It also outputs its reasoning.
+    *   **Action:** Implements a Tree-of-Thought process. It analyzes the *final, polished* textual analysis, debates chart types, and generates the Python code for the single most effective visualization, complete with its own reasoning.
 
-4.  **`Summary Agent`:**
+7.  **`Summary Agent`:**
     *   **Role:** The Communications Expert.
-    *   **Action:** Reads the final, detailed JSON analysis and writes a concise, high-level executive summary in markdown for easy digestion by the user.
-
+    *   **Action:** Distills the final, complex analysis into a concise, bullet-point executive summary for the user.
+    
 ## ⚙️ Local Setup and Installation
 
 To run this application on your local machine, follow these steps:
