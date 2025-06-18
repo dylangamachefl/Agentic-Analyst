@@ -27,7 +27,7 @@ The application is a functional implementation inspired by the concepts presente
 
 ## 📸 Application Screenshot
 
-*(It's highly recommended to add a screenshot of your working app here. Replace the placeholder below.)*
+*(It's highly recommended to add a screenshot of your working app here. You can drag-and-drop an image file into the GitHub text editor.)*
 
 
 ## 🛠️ Technology Stack
@@ -76,7 +76,8 @@ The core process is: **Profile -> Detect -> Extract -> Analyze -> Evaluate -> Re
 
 To run this application on your local machine, follow these steps:
 
-### 1. Clone the Repository```bash
+### 1. Clone the Repository
+```bash
 git clone https://github.com/your-username/your-repo-name.git
 cd your-repo-name
 ```
@@ -102,7 +103,8 @@ plotly
 python-dotenv
 ```
 
-### 4. Install Dependencies```bash
+### 4. Install Dependencies
+```bash
 pip install -r requirements.txt
 ```
 
@@ -118,7 +120,8 @@ For security, we will use an environment file.
 ### 6. Run the Application
 ```bash
 streamlit run app.py
-```Your browser will open a new tab with the running application.
+```
+Your browser will open a new tab with the running application.
 
 ## ☁️ Deployment on Streamlit Community Cloud (Free)
 
@@ -166,3 +169,4 @@ This project is a practical implementation and extension of the ideas presented 
 ## 📄 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
+```
