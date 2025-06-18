@@ -3,6 +3,7 @@ import pandas as pd
 import google.generativeai as genai
 import json
 import re
+import traceback
 
 # --- HELPER & AGENT FUNCTIONS ---
 
@@ -198,31 +199,78 @@ def insight_to_chart_agent(
         - Assigns the final chart to a variable named `fig`.
     """
 
-    response = model.generate_content(prompt)
+    max_retries = 3
+    for attempt in range(max_retries):
+        st.write(f"↪️ Visualization attempt {attempt + 1}...")
 
-    # --- NEW: Extract both thoughts and code ---
-    content = response.text
-    thoughts_match = re.search(r"```thoughts(.*?)```", content, re.S)
-    code_match = re.search(r"```python(.*?)```", content, re.S)
+        response = model.generate_content(prompt)
+        content = response.text
 
-    if not (thoughts_match and code_match):
-        # Fallback for models that might ignore the dual-block instruction
-        st.warning(
-            "Agent did not follow ToT format. Falling back to code-only extraction."
-        )
-        st.session_state.viz_thoughts = "The agent did not provide its thought process."
-        code_text = content  # Assume the whole response is code
-    else:
-        st.session_state.viz_thoughts = thoughts_match.group(1).strip()
+        # --- Extract thoughts and code from the response ---
+        thoughts_match = re.search(r"```thoughts(.*?)```", content, re.S)
+        code_match = re.search(r"```python(.*?)```", content, re.S)
+
+        if not (thoughts_match and code_match):
+            st.warning(
+                "Agent did not follow format. Re-prompting with stricter instructions."
+            )
+            prompt = (
+                "Your previous response was not formatted correctly. Please return exactly two blocks: ```thoughts and ```python. "
+                + prompt
+            )
+            continue
+
+        thoughts = thoughts_match.group(1).strip()
         code_text = code_match.group(1).strip()
 
-    # Clean up the code block just in case
-    if code_text.startswith("```python"):
-        code_text = code_text[9:]
-    if code_text.endswith("```"):
-        code_text = code_text[:-3]
+        # --- Self-Correction Loop: Try to execute the code ---
+        try:
+            local_namespace = {}
+            exec(code_text, globals(), local_namespace)
 
-    return code_text.strip()
+            # Check if the execution was successful by seeing if 'fig' exists.
+            if "fig" in local_namespace:
+                st.success(
+                    f"   - Code validated successfully on attempt {attempt + 1}."
+                )
+                st.session_state.viz_thoughts = thoughts
+                return code_text  # Success! Return the good code.
+            else:
+                raise ValueError(
+                    "Generated code ran without errors but did not create a 'fig' variable."
+                )
+
+        except Exception as e:
+            # If execution fails, capture the error and re-prompt
+            error_traceback = traceback.format_exc()
+            st.warning(
+                f"   - Attempt {attempt + 1} failed. Asking agent to fix the code..."
+            )
+
+            # Create a new, corrective prompt
+            prompt = f"""
+            The Python code you previously generated resulted in an error.
+            Your task is to analyze the error and the faulty code, and provide a corrected version.
+
+            THE ERROR TRACEBACK:
+            ```
+            {error_traceback}
+            ```
+
+            THE FAULTY CODE:
+            ```python
+            {code_text}
+            ```
+
+            Please provide a new, corrected Python script that successfully creates a Plotly Express chart and assigns it to a variable `fig`.
+            Follow all original instructions. Return the full Tree-of-Thought block and the corrected python block.
+            """
+            # The loop will now continue with this new, corrective prompt.
+
+    # If all retries fail, raise a final exception
+    raise Exception(
+        f"The visualization agent failed to generate valid code after {max_retries} attempts."
+    )
 
 
 def summary_agent(model, final_analysis: dict) -> str:
