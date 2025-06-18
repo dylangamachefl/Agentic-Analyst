@@ -48,16 +48,90 @@ def estimate_token_usage(model, df_profile, max_iterations):
 
 @st.cache_data
 def data_profiler_agent(df: pd.DataFrame) -> str:
-    """Creates a statistical JSON summary of a DataFrame without using an LLM."""
+    """
+    Creates a rich, enhanced statistical and structural JSON summary of a DataFrame.
+    This version includes semantic type detection, detailed categorical analysis,
+    and a numerical correlation matrix.
+    """
     profile = {
         "file_info": {
             "num_rows": len(df),
             "num_cols": len(df.columns),
             "columns": list(df.columns),
         },
-        "column_summaries": json.loads(df.describe(include="all").to_json()),
-        "null_values": json.loads(df.isnull().sum().to_json()),
+        "column_details": {},
+        "correlation_matrix": None,
     }
+
+    # --- NEW: Semantic Type Detection and Detailed Column Analysis ---
+    for col in df.columns:
+        col_data = df[col]
+        col_profile = {}
+
+        # Heuristics for semantic type detection
+        if pd.api.types.is_numeric_dtype(col_data):
+            # Check if it looks like a binary/boolean column
+            if col_data.nunique() == 2 and col_data.min() == 0 and col_data.max() == 1:
+                semantic_type = "boolean"
+            else:
+                semantic_type = "numeric"
+        else:
+            # Try to convert to datetime
+            try:
+                pd.to_datetime(col_data)
+                semantic_type = "datetime"
+            except (ValueError, TypeError):
+                # Fallback to categorical or text
+                if (
+                    col_data.nunique() / len(col_data) < 0.5
+                ):  # Heuristic for categorical
+                    semantic_type = "categorical"
+                else:
+                    semantic_type = "text"
+
+        col_profile["semantic_type"] = semantic_type
+        col_profile["null_values"] = int(col_data.isnull().sum())
+
+        # --- NEW: Granular Analysis based on Semantic Type ---
+        if semantic_type == "numeric":
+            desc = col_data.describe()
+            col_profile["stats"] = {
+                "mean": desc.get("mean", 0),
+                "std": desc.get("std", 0),
+                "min": desc.get("min", 0),
+                "max": desc.get("max", 0),
+                "25%": desc.get("25%", 0),
+                "50%": desc.get("50%", 0),
+                "75%": desc.get("75%", 0),
+            }
+
+        elif semantic_type == "categorical" or semantic_type == "boolean":
+            value_counts = col_data.value_counts().to_dict()
+            col_profile["value_counts"] = value_counts
+            col_profile["num_unique"] = len(value_counts)
+
+        elif semantic_type == "datetime":
+            dt_series = pd.to_datetime(col_data)
+            col_profile["range"] = {
+                "earliest": str(dt_series.min()),
+                "latest": str(dt_series.max()),
+            }
+
+        elif semantic_type == "text":
+            col_profile["num_unique"] = col_data.nunique()
+
+        profile["column_details"][col] = col_profile
+
+    # --- NEW: Correlation Analysis for all numeric columns ---
+    numeric_cols = [
+        col
+        for col, details in profile["column_details"].items()
+        if details["semantic_type"] == "numeric"
+    ]
+    if len(numeric_cols) > 1:
+        correlation_matrix = df[numeric_cols].corr()
+        profile["correlation_matrix"] = json.loads(correlation_matrix.to_json())
+
     return json.dumps(profile, indent=2)
 
 
