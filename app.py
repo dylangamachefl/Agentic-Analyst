@@ -240,8 +240,8 @@ def summary_agent(model, final_analysis: dict) -> str:
 
 
 # --- STREAMLIT UI ---
-st.set_page_config(layout="wide", page_title="Data-to-Dashboard Agent")
-st.title("📊 Data-to-Dashboard Agent")
+st.set_page_config(layout="wide", page_title="Data-to-Analysis Agent")
+st.title("📊 Data-to-Analysis Agent")
 st.markdown(
     "Upload a CSV file, and this multi-agent system will perform an analysis and generate a visualization."
 )
@@ -368,56 +368,25 @@ if analyze_button:
             "Data not loaded correctly. Please ensure a file is uploaded and API key is set."
         )
 
-# --- Display Results (FINAL VERSION) ---
+# --- Display Results (REWORKED INTERFACE) ---
 if st.session_state.get("analysis_complete", False):
     st.header("Results")
 
-    # --- Part 1: The Generated Chart and its Rationale ---
-    st.subheader("Generated Visualization")
+    # --- Part 1: The Formatted Textual Analysis ---
+    st.subheader("Textual Analysis & Insights")
 
-    col1, col2 = st.columns([3, 2])  # Give more space to the chart
-    with col1:
-        try:
-            local_namespace = {}
-            exec(st.session_state.visualization_code, globals(), local_namespace)
-            fig = local_namespace.get("fig")
-            if fig:
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.warning(
-                    "Generated code did not produce a Plotly figure named 'fig'."
-                )
-        except Exception as e:
-            st.error(f"Error executing visualization code: {e}")
-
-    with col2:
-        st.markdown("##### 💡 Agent's Reasoning")
-        # Display the thoughts captured from the ToT agent
-        if "viz_thoughts" in st.session_state:
-            st.markdown(st.session_state.viz_thoughts)
-        else:
-            st.info("The visualization agent did not provide its reasoning.")
-
-    # Show the generated code in an expander
-    with st.expander("View Generated Visualization Code"):
-        st.code(st.session_state.visualization_code, language="python")
-
-    st.divider()
-
-    # --- Part 2: The Formatted Textual Analysis ---
-    st.header("Textual Analysis & Insights")
-
+    # Display the executive summary first
     if "analysis_summary" in st.session_state:
-        st.subheader("Executive Summary")
+        st.markdown("#### Executive Summary")
         st.markdown(st.session_state.analysis_summary)
 
+    # Use tabs for the detailed breakdown
     analysis_json = st.session_state.final_analysis
-    if (
-        "Descriptive" in analysis_json.get("analysis", {})
-        and "Predictive" in analysis_json.get("analysis", {})
-        and "Domain-Related" in analysis_json.get("analysis", {})
+    if "analysis" in analysis_json and all(
+        k in analysis_json["analysis"]
+        for k in ["Descriptive", "Predictive", "Domain-Related"]
     ):
-        st.subheader("Detailed Analysis")
+        st.markdown("#### Detailed Analysis")
         tab1, tab2, tab3 = st.tabs(
             ["📊 Descriptive", "📈 Predictive", "💡 Strategic (Domain)"]
         )
@@ -427,6 +396,33 @@ if st.session_state.get("analysis_complete", False):
             st.write(analysis_json["analysis"]["Predictive"])
         with tab3:
             st.write(analysis_json["analysis"]["Domain-Related"])
+
+    st.divider()
+
+    # --- Part 2: The Generated Visualization & Reasoning ---
+    st.subheader("Generated Visualization")
+
+    # Display the chart taking the full width
+    try:
+        local_namespace = {}
+        exec(st.session_state.visualization_code, globals(), local_namespace)
+        fig = local_namespace.get("fig")
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("Generated code did not produce a Plotly figure named 'fig'.")
+    except Exception as e:
+        st.error(f"Error executing visualization code: {e}")
+
+    # Use expanders for the reasoning and code to keep the UI clean
+    with st.expander("View Agent's Visualization Reasoning"):
+        if "viz_thoughts" in st.session_state:
+            st.markdown(st.session_state.viz_thoughts)
+        else:
+            st.info("The visualization agent did not provide its reasoning.")
+
+    with st.expander("View Generated Visualization Code"):
+        st.code(st.session_state.visualization_code, language="python")
 
     with st.expander("View Full Raw JSON Analysis"):
         st.json(analysis_json)

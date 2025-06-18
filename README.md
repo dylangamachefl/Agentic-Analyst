@@ -1,4 +1,4 @@
-# Agentic Analyst: A Multi-Agent AI Analyst
+# Data-to-Analysis: A Multi-Agent AI Analyst
 
 This project is an interactive web application that leverages a sophisticated multi-agent system, powered by the Google Gemini API, to automatically analyze a CSV dataset, derive strategic business insights, and generate a final, insightful data visualization.
 
@@ -122,34 +122,6 @@ For security, we will use an environment file.
 streamlit run app.py
 ```
 Your browser will open a new tab with the running application.
-
-## ☁️ Deployment on Streamlit Community Cloud (Free)
-
-You can deploy this app for free and share it with the world.
-
-1.  **Push to GitHub:** Make sure your project, including the `app.py` and `requirements.txt` files, is pushed to a public GitHub repository.
-
-2.  **Sign Up for Streamlit Community Cloud:** Go to [streamlit.io/cloud](https://streamlit.io/cloud) and sign up using your GitHub account.
-
-3.  **Deploy New App:**
-    *   From your workspace, click "New app".
-    *   Select your repository, the branch (usually `main`), and the path to your `app.py` file.
-    *   Click "Deploy!".
-
-4.  **Add Your API Key as a Secret:** Your app will not work until you provide the API key securely.
-    *   In your app's dashboard on Streamlit Cloud, go to the "Settings" menu (the three dots).
-    *   Go to the "Secrets" section.
-    *   Add your API key in the following format and save it:
-        ```toml
-        # .streamlit/secrets.toml
-        API_KEY="your-google-api-key-here"
-        ```
-    *   You will need to modify the `app.py` one last time to read this secret. Change the `api_key` line to:
-        ```python
-        # In the sidebar section
-        api_key = st.secrets.get("API_KEY", "")
-        ```
-        (You can remove the `st.text_input` for the API key in your deployed version).
 
 ## 🎓 Inspiration and Credit
 
