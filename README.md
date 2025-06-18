@@ -13,7 +13,7 @@ The application is a functional implementation inspired by the concepts presente
 
 ## 🚀 Live Demo
 
-**[Link to the deployed Streamlit Community Cloud App]**(https://agentic-analyst.streamlit.app/)
+**[Link to the deployed Streamlit Community Cloud App]**
 
 ## ✨ Key Features
 
