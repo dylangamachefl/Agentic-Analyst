@@ -1,0 +1,20 @@
+# Python virtual environment
+venv/
+*.venv
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+.env.*
+
+# Temporary data file created by the app
+temp_data.csv
+
+# Streamlit specific
+.streamlit/

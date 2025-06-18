@@ -1,0 +1,10 @@
+Date,Region,Channel,New_Customers,Revenue,Marketing_Spend
+2024-01-15,North,Organic Search,50,2500,0
+2024-01-20,North,Paid Ads,75,3500,1200
+2024-02-10,South,Email,60,3000,150
+2024-02-18,South,Paid Ads,80,4200,1500
+2024-03-05,West,Organic Search,55,2800,0
+2024-03-22,West,Referral,40,2100,50
+2024-04-11,North,Email,65,3100,200
+2024-04-25,South,Organic Search,70,3600,0
+2024-05-14,West,Paid Ads,90,4800,1800
