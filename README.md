@@ -13,8 +13,7 @@ The application is a functional implementation inspired by the concepts presente
 
 ## 🚀 Live Demo
 
-**[Link to your deployed Streamlit Community Cloud App]**  
-*(Note: You will replace this with your actual URL after deploying the app.)*
+**[Link to the deployed Streamlit Community Cloud App]**
 
 ## ✨ Key Features
 
