@@ -129,7 +129,7 @@ This project is a practical implementation and extension of the ideas presented 
 
 *   **Paper:** Data-to-Dashboard: Multi-Agent LLM Framework for Insightful Visualization in Enterprise Analytics
 *   **Authors:** Ran Zhang, Mohannad Elhamod
-*   **arXiv Link:** [https://arxiv.org/abs/2405.16395](https://arxiv.org/abs/2405.16395)
+*   **arXiv Link:** [https://arxiv.org/abs/2505.26395](https://arxiv.org/abs/2505.23695)
 
 ## 🚀 Future Improvements
 
@@ -141,4 +141,3 @@ This project is a practical implementation and extension of the ideas presented 
 ## 📄 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
-```
