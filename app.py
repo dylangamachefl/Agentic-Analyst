@@ -332,7 +332,9 @@ if analyze_button:
                 ) as status:
                     analysis_history = []
                     for i in range(max_iterations):
-                        # ... (analysis loop is the same, but now passes user_focus_str)
+                        status.update(
+                            label=f"Step 2: Performing Iterative Analysis... (Iteration {i + 1}/{max_iterations})"
+                        )
                         if not analysis_history:
                             domain_info = domain_detector_agent(model, df_profile)
                             concepts = concept_extractor_agent(
