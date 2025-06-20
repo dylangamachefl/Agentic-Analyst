@@ -17,12 +17,13 @@ The application is a functional implementation inspired by the concepts presente
 
 ## ✨ Key Features
 
-*   **Multi-Agent System:** Utilizes a pipeline of specialized AI agents (Profiler, Analyst, Charting Expert, Summarizer) that collaborate to produce the final output.
-*   **Tree-of-Thought (ToT) Reasoning:** The visualization agent uses a ToT prompt to debate and select the most effective chart type, explaining its rationale.
-*   **Expert Persona Prompting:** The analysis agent adopts the persona of a senior business consultant, using established business frameworks (e.g., SWOT, PESTEL) to generate high-quality, strategic insights.
-*   **Self-Correcting JSON Output:** The system automatically detects when an agent produces invalid JSON, re-prompts it with the error, and asks for a correction, making the pipeline more robust.
-*   **Live Token Estimation:** Provides users with a real-time estimate of the token usage for their analysis *before* they run it, promoting transparent and cost-conscious use.
-*   **Interactive UI:** Built with Streamlit for a clean, user-friendly experience, including model selection, file uploads, and a polished results display with tabs and summaries.
+*   **Advanced Multi-Agent System:** Utilizes a pipeline of specialized AI agents (Profiler, Domain Detector, Concept Extractor, Analyst, Visualizer, Summarizer) that collaborate in a self-correcting, iterative loop.
+*   **Modular & Maintainable Code:** Agent prompts are modularized into a separate `prompts.py` file, making the core application logic cleaner and easier to manage.
+*   **Rich Data Profiling:** The initial `Data Profiler` (which uses no LLM calls) performs deep analysis, including semantic type detection (identifying categories, booleans, datetimes), detailed value counts, and a numerical correlation matrix to ground the AI agents with high-quality data.
+*   **Expert Persona & ToT Reasoning:** The `Analysis Agent` adopts the persona of a senior business consultant to generate strategic insights, while the `Visualization Agent` uses a Tree-of-Thought (ToT) process to debate and select the most effective chart type.
+*   **Robust Self-Correction:** Both the analysis and visualization agents feature a retry mechanism. If an agent produces invalid JSON or buggy Python code, it automatically re-prompts itself with the error, enabling it to fix its own mistakes.
+*   **User-Directed Analysis:** An "Advanced Settings" option allows users to provide a specific focus or question, guiding the AI's analysis toward their primary areas of interest.
+*   **Transparent & Secure:** Provides users with the *actual* token count post-analysis for transparent cost tracking. It also includes enhanced error handling for API issues and automatically cleans up temporary data files for better security.
 
 ## 📸 Application Screenshot
 
