@@ -27,8 +27,7 @@ The application is a functional implementation inspired by the concepts presente
 
 ## 📸 Application Screenshot
 
-*(It's highly recommended to add a screenshot of your working app here. You can drag-and-drop an image file into the GitHub text editor.)*
-
+![Screenshot 2025-06-25 at 13-33-45 Data-to-Analysis Agent · Streamlit](https://github.com/user-attachments/assets/61af6b6b-116d-41fb-89b7-24a7e86b6ffa)
 
 ## 🛠️ Technology Stack
 
